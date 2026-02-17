@@ -16,7 +16,7 @@ import (
 
 func tableAwsRDSGlobalCluster(_ context.Context) *plugin.Table {
 	return &plugin.Table{
-		Name:        "aws_rds_global_cluster",
+		Name:        "aws_rds_db_global_cluster",
 		Description: "AWS RDS Global Cluster",
 		Get: &plugin.GetConfig{
 			KeyColumns: plugin.SingleColumn("global_cluster_identifier"),
@@ -141,7 +141,7 @@ func tableAwsRDSGlobalCluster(_ context.Context) *plugin.Table {
 func listRDSGlobalClusters(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
 	svc, err := RDSClient(ctx, d)
 	if err != nil {
-		plugin.Logger(ctx).Error("aws_rds_global_cluster.listRDSGlobalClusters", "connection_error", err)
+		plugin.Logger(ctx).Error("aws_rds_db_global_cluster.listRDSGlobalClusters", "connection_error", err)
 		return nil, err
 	}
 
@@ -168,7 +168,7 @@ func listRDSGlobalClusters(ctx context.Context, d *plugin.QueryData, _ *plugin.H
 
 		output, err := paginator.NextPage(ctx)
 		if err != nil {
-			plugin.Logger(ctx).Error("aws_rds_global_cluster.listRDSGlobalClusters", "api_error", err)
+			plugin.Logger(ctx).Error("aws_rds_db_global_cluster.listRDSGlobalClusters", "api_error", err)
 			return nil, err
 		}
 
@@ -193,7 +193,7 @@ func getRDSGlobalCluster(ctx context.Context, d *plugin.QueryData, _ *plugin.Hyd
 
 	svc, err := RDSClient(ctx, d)
 	if err != nil {
-		plugin.Logger(ctx).Error("aws_rds_global_cluster.getRDSGlobalCluster", "connection_error", err)
+		plugin.Logger(ctx).Error("aws_rds_db_global_cluster.getRDSGlobalCluster", "connection_error", err)
 		return nil, err
 	}
 
@@ -203,7 +203,7 @@ func getRDSGlobalCluster(ctx context.Context, d *plugin.QueryData, _ *plugin.Hyd
 
 	op, err := svc.DescribeGlobalClusters(ctx, input)
 	if err != nil {
-		plugin.Logger(ctx).Error("aws_rds_global_cluster.getRDSGlobalCluster", "api_error", err)
+		plugin.Logger(ctx).Error("aws_rds_db_global_cluster.getRDSGlobalCluster", "api_error", err)
 		return nil, err
 	}
 
@@ -217,7 +217,7 @@ func getRDSGlobalCluster(ctx context.Context, d *plugin.QueryData, _ *plugin.Hyd
 func getRDSGlobalClusterTags(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	svc, err := RDSClient(ctx, d)
 	if err != nil {
-		plugin.Logger(ctx).Error("aws_rds_global_cluster.getRDSGlobalClusterTags", "connection_error", err)
+		plugin.Logger(ctx).Error("aws_rds_db_global_cluster.getRDSGlobalClusterTags", "connection_error", err)
 		return nil, err
 	}
 
@@ -229,7 +229,7 @@ func getRDSGlobalClusterTags(ctx context.Context, d *plugin.QueryData, h *plugin
 	input := &rds.ListTagsForResourceInput{ResourceName: globalCluster.GlobalClusterArn}
 	op, err := svc.ListTagsForResource(ctx, input)
 	if err != nil {
-		plugin.Logger(ctx).Error("aws_rds_global_cluster.getRDSGlobalClusterTags", "api_error", err)
+		plugin.Logger(ctx).Error("aws_rds_db_global_cluster.getRDSGlobalClusterTags", "api_error", err)
 		return nil, err
 	}
 
@@ -239,7 +239,7 @@ func getRDSGlobalClusterTags(ctx context.Context, d *plugin.QueryData, h *plugin
 func getRDSGlobalClusterEndpoint(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	svc, err := RDSClient(ctx, d)
 	if err != nil {
-		plugin.Logger(ctx).Error("aws_rds_global_cluster.getRDSGlobalClusterEndpoint", "connection_error", err)
+		plugin.Logger(ctx).Error("aws_rds_db_global_cluster.getRDSGlobalClusterEndpoint", "connection_error", err)
 		return nil, err
 	}
 
@@ -252,7 +252,7 @@ func getRDSGlobalClusterEndpoint(ctx context.Context, d *plugin.QueryData, h *pl
 
 			op, err := svc.DescribeDBClusters(ctx, input)
 			if err != nil {
-				plugin.Logger(ctx).Error("aws_rds_global_cluster.getRDSGlobalClusterEndpoint", "api_error", err)
+				plugin.Logger(ctx).Error("aws_rds_db_global_cluster.getRDSGlobalClusterEndpoint", "api_error", err)
 				return nil, err
 			}
 
